@@ -13,6 +13,7 @@ using Rage.Native;
 using System.Diagnostics;
 using System.IO;
 using Basic_Callouts.Callouts;
+using System.Drawing;
 
 namespace Basic_Callouts.Callouts
 {
@@ -40,33 +41,23 @@ namespace Basic_Callouts.Callouts
 
         public override bool OnCalloutAccepted()
         {
-            Functions.PlayScannerAudio("UNIT_TAKING_CALL_01 REPORT_RESPONSE_COPY_03");
-            Functions.PlayScannerAudio("BEAT_03 XRAY DIV_08 UNITS_RESPOND_CODE_03_02");
-            SuspectVehicle = new Vehicle("POLICE", SpawnPoint);
-            SuspectVehicle.IsPersistent = true;
-            Suspect = SuspectVehicle.CreateRandomDriver();
-            Suspect.IsPersistent = true;
-            Suspect.BlockPermanentEvents = true;
-            SuspectBlip = Suspect.AttachBlip();
-            SuspectBlip.IsFriendly = true;
-            SuspectBlip.Color = System.Drawing.Color.Red;
-            SuspectBlip.EnableRoute(System.Drawing.Color.Red);
+            SuspectBlip = new Blip(CalloutPosition, 60f);
+            SuspectBlip.Color = Color.Yellow;
+            SuspectBlip.Alpha = 0.6f;
+            SuspectBlip.EnableRoute(System.Drawing.Color.Yellow);
             return base.OnCalloutAccepted();
         }
 
         public override void Process()
         {
             base.Process();
-            if (Game.LocalPlayer.Character.DistanceTo(Suspect.Position) < 60f)
-            { Game.DisplaySubtitle("~b~Dispatch~w~: Disregard, callout is a prankcall.", 4000); GameFiber.Wait(1000); End(); }
+            if (Game.LocalPlayer.Character.DistanceTo(CalloutPosition) < 60f)
+            { Game.DisplaySubtitle("Investigate the area for any suspicious activity", 4000); GameFiber.Wait(5000); Game.DisplaySubtitle("~b~Dispatch~w~: Disregard, callout is a prankcall.", 4000); Functions.PlayScannerAudio("WE_ARE_CODE_4"); GameFiber.Wait(1000); End(); }
         }
 
         public override void End()
         {
             base.End();
-            Functions.PlayScannerAudio("WE_ARE_CODE_4");
-            if (Suspect.Exists()) { Suspect.Dismiss(); }
-            if (SuspectVehicle.Exists()) { SuspectVehicle.Dismiss(); }
             if (SuspectBlip.Exists()) { SuspectBlip.Delete(); }
 
         }
