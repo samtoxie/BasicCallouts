@@ -1,0 +1,11 @@
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\bin\Debug\Basic Callouts.dll
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\bin\Debug\Basic Callouts.pdb
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\bin\Debug\LSPD First Response.dll
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\bin\Debug\RagePluginHookSDK.dll
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\bin\Debug\RagePluginHookSDK.xml
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\obj\Debug\Basic Callouts.csprojAssemblyReference.cache
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\obj\Debug\Basic Callouts.csproj.CoreCompileInputs.cache
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\obj\Debug\Basic Callouts.csproj.CopyComplete
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\obj\Debug\Basic Callouts.dll
+E:\Github\Basic-Callouts\Basic Callouts\Basic Callouts\obj\Debug\Basic Callouts.pdb
