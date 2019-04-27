@@ -10,6 +10,7 @@ using LSPD_First_Response.Mod.API;
 using LSPD_First_Response.Mod.Callouts;
 using LSPD_First_Response.Engine.Scripting.Entities;
 using Basic_Callouts;
+using Basic_Callouts.Callouts;
 
 namespace Basic_Callouts
 {
@@ -23,13 +24,13 @@ namespace Basic_Callouts
 
             //Game.LogTrivial's are used to help you identify problems when debugging a crash with your plugin, so you know exactly what's going on when.
 
-            //This will show in the RagePluginHook.log as "Example Plugin 1.0.0.0 has been initialised." 
+            //This will show in the RagePluginHook.log as "Basic Callouts 1.0.0.0 has been initialised." 
             Game.LogTrivial("Basic Callouts " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + " has been initialised.");
 
-            //This one will show in RagePluginHook.log as "Go on duty to fully load Example Plugin."
+            //This one will show in RagePluginHook.log as "Go on duty to fully load Basic Callouts."
             Game.LogTrivial("Go on duty to fully load Basic Callouts.");
         }
-        //This is a simple message saying that Example Plugin has been cleanup.
+        //This is a simple message saying that Basic Callouts has been cleanup.
         public override void Finally()
         {
             Game.LogTrivial("Basic Callouts has been cleaned up.");
@@ -50,7 +51,8 @@ namespace Basic_Callouts
         //This is the method that we called earlier in private static void OnOnDutyStateChangedHandler. This registers the callouts we have it setup to register, we'll come back to this after we make our callout.
         private static void RegisterCallouts()
         {
-            Functions.RegisterCallout(typeof(Callouts.FakeCall));
+            Functions.RegisterCallout(typeof(FakeCall));
+            Functions.RegisterCallout(typeof(BrokenVehicle));
         }
     }
 }

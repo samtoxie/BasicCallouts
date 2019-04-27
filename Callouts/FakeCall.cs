@@ -12,7 +12,7 @@ using Rage;
 using Rage.Native;
 using System.Diagnostics;
 using System.IO;
-using Basic_Callouts.Callouts;
+using Basic_Callouts.Common;
 using System.Drawing;
 
 namespace Basic_Callouts.Callouts
