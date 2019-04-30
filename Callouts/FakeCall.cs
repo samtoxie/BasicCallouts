@@ -52,7 +52,7 @@ namespace Basic_Callouts.Callouts
         {
             base.Process();
             if (Game.LocalPlayer.Character.DistanceTo(CalloutPosition) < 60f)
-            { Game.DisplaySubtitle("Investigate the area for any suspicious activity", 4000); GameFiber.Wait(5000); Game.DisplaySubtitle("~b~Dispatch~w~: Disregard, callout is a prankcall.", 4000); Functions.PlayScannerAudio("WE_ARE_CODE_4"); GameFiber.Wait(1000); End(); }
+            { Game.DisplaySubtitle("Investigate the area for any suspicious activity", 4000); GameFiber.Wait(5000); Game.DisplayNotification("~r~Dispatch~w~: Disregard, callout is a prankcall."); Functions.PlayScannerAudio("WE_ARE_CODE_4"); GameFiber.Wait(1000); End(); }
         }
 
         public override void End()

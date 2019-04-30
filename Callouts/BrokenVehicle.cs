@@ -18,7 +18,7 @@ using System.Drawing;
 
 namespace Basic_Callouts.Callouts
 {
-    [CalloutInfo("BrokenVehicle", CalloutProbability.Medium)]
+    [CalloutInfo("Abandoned Vehicle", CalloutProbability.Medium)]
     public class BrokenVehicle : Callout
     {
         //ASSETS
@@ -31,6 +31,10 @@ namespace Basic_Callouts.Callouts
         private Vector3 SpawnPoint;
         private float SpawnHeading;
         private Blip myBlip;
+        private string[] MyModel = new string[] { "DUKES", "BALLER", "BALLER2", "BISON", "BISON2", "BJXL", "CAVALCADE", "CHEETAH", "COGCABRIO", "ASEA", "ADDER", "FELON", "FELON2", "ZENTORNO",
+        "WARRENER", "RAPIDGT", "INTRUDER", "FELTZER2", "FQ2", "RANCHERXL", "REBEL", "SCHWARZER", "COQUETTE", "CARBONIZZARE", "EMPEROR", "SULTAN", "EXEMPLAR", "MASSACRO",
+        "DOMINATOR", "ASTEROPE", "PRAIRIE", "NINEF", "WASHINGTON", "CHINO", "CASCO", "INFERNUS", "ZTYPE", "DILETTANTE", "VIRGO", "F620", "PRIMO", "SULTAN", "EXEMPLAR", "F620", "FELON2", "FELON", "SENTINEL", "WINDSOR",
+            "DOMINATOR", "DUKES", "GAUNTLET", "VIRGO", "ADDER", "BUFFALO", "ZENTORNO", "MASSACRO" };
         private bool CalloutRunning = false;
         private bool CalloutRunning2 = false;
 
@@ -63,11 +67,11 @@ namespace Basic_Callouts.Callouts
 
             SpawnPoint = ChosenSpawnData.Item1;
             SpawnHeading = ChosenSpawnData.Item2;
-            myVehicle = new Vehicle("TAILGATER", SpawnPoint, SpawnHeading);
+            myVehicle = new Vehicle(MyModel[rnd.Next(MyModel.Length)], SpawnPoint, SpawnHeading);
             if (!myVehicle.Exists()) return false;
-
-            CalloutMessage = "Broken Down Vehicle"; CalloutPosition = SpawnPoint;
-            Functions.PlayScannerAudio("ASSISTANCE_REQUIRED CRIME_CIVILIAN_ASSISTANCE");
+            ShowCalloutAreaBlipBeforeAccepting(SpawnPoint, 30f);
+            CalloutMessage = "Abandoned Vehicle"; CalloutPosition = SpawnPoint;
+            Functions.PlayScannerAudio("ASSISTANCE_REQUIRED VEHICLE_ON_FIRE");
 
             return base.OnBeforeCalloutDisplayed();
         }
@@ -78,10 +82,14 @@ namespace Basic_Callouts.Callouts
             myBlip = myVehicle.AttachBlip();
             myBlip.Color = Color.LightSkyBlue;
             myBlip.EnableRoute(Color.LightSkyBlue);
-            Game.DisplaySubtitle("~b~Dispatch~w~: Driver of the vehicle has already left the area", 9000);
+            Functions.PlayScannerAudio("UNITS_RESPOND_CODE_03");
+            Game.DisplayNotification("~r~Dispatcher~w~: Caller saw the vehicle abandoned with no driver nearby. Smoke coming from engine so possible on fire. Respond Code 3, Fire Department is also en-route.");
             CalloutRunning = true;
             CalloutRunning2 = true;
             myVehicle.EngineHealth = MathHelper.GetRandomSingle(100.0f, 10.0f);
+            Rage.Native.NativeFunction.Natives.SMASH_VEHICLE_WINDOW(myVehicle, 0);
+            Rage.Native.NativeFunction.Natives.SMASH_VEHICLE_WINDOW(myVehicle, 6);
+            myVehicle.IsStolen = true;
             myVehicle.LicensePlate =  MathHelper.GetRandomInteger(0, 9).ToString() +
                                       MathHelper.GetRandomInteger(0, 9).ToString() +
                                       Convert.ToChar(Convert.ToInt32(Math.Floor(26 * MathHelper.GetRandomDouble(0, 1) + 65))) +
@@ -98,18 +106,26 @@ namespace Basic_Callouts.Callouts
             while (CalloutRunning)
             {
                 GameFiber.Yield();
+
                 if (Game.LocalPlayer.Character.DistanceTo(CalloutPosition) < 60f)
                 {
-                    Game.DisplaySubtitle("Clear the vehicle from the road", 3000);
-                    Game.DisplayHelp("Once the car is towed away press END to end the callout", 7500);
-                    GameFiber.Wait(7500);
+                    Game.DisplayNotification("~r~Dispatch~w~: Update: Car is not on fire, only smoke coming from engine. Fire Department is cancelled. Car has recently been stolen.");
+                    Game.DisplayHelp("If the callout doesn't end iteself you can press END to force end it!", 7500);
+                    GameFiber.Wait(2000);
+                    Functions.PlayScannerAudio("REPORT_RESPONSE_COPY");
+                    GameFiber.Wait(5500);
                     CalloutRunning = false;
                 }
             }
             while (CalloutRunning2)
             {
                 GameFiber.Yield();
-                if (Game.IsKeyDownRightNow(Keys.End))
+                if (Vector3.Distance(myVehicle.Position, ChosenSpawnData.Item1) > 6f)
+                {
+                    End();
+                    CalloutRunning2 = false;
+                }
+                else if (Game.IsKeyDownRightNow(Keys.End))
                 {
                     End();
                     CalloutRunning2 = false;
@@ -122,7 +138,7 @@ namespace Basic_Callouts.Callouts
             base.End();
             Functions.PlayScannerAudio("WE_ARE_CODE_4");
             if (myBlip.Exists()) { myBlip.Delete(); }
-            if (myVehicle.Exists()) { myVehicle.Dismiss(); }
+            if (myVehicle.Exists()) { myVehicle.Delete(); }
 
         }
     }
